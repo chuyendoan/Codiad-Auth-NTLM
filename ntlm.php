@@ -34,12 +34,12 @@
     public static $userdb = array();
     
     public static function login($userdb = true) {
-      self::ntlm_unset_auth();
-    
-      $auth = self::ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", $userdb);
-      if ($auth['authenticated']) {
-          $_SESSION['user'] = $auth['username'];
-      } 
+      if (!isset($_SESSION['user'])) {
+        $auth = self::ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", $userdb);
+        if ($auth['authenticated']) {
+            $_SESSION['user'] = $auth['username'];
+        }
+      }
     }
     
     public static function get_ntlm_user_hash($user) {
@@ -148,7 +148,7 @@
       unset ($_SESSION['_ntlm_auth']);
     }
 
-    public static function ntlm_prompt($targetname, $domain, $computer, $dnsdomain, $dnscomputer, $ntlm_verify_hash_callback = true, $failmsg = "<h1>Authentication Required</h1>") {
+    public static function ntlm_prompt($targetname, $domain, $computer, $dnsdomain, $dnscomputer, $ntlm_verify_hash_callback = true) {
 
       $auth_header = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : null;
       if ($auth_header == null && function_exists('apache_request_headers')) {
@@ -162,7 +162,7 @@
       if (!$auth_header) {
         header('HTTP/1.1 401 Unauthorized');
         header('WWW-Authenticate: NTLM');
-        print $failmsg;
+        print 'Authentication Required';
         exit;
       }
 
@@ -184,14 +184,6 @@
           $auth = self::ntlm_parse_response_msg($msg, $_SESSION['_ntlm_server_challenge'], $ntlm_verify_hash_callback);
           unset($_SESSION['_ntlm_server_challenge']);
           
-          if (!$auth['authenticated']) {
-            header('HTTP/1.1 401 Unauthorized');
-            header('WWW-Authenticate: NTLM');
-            print $failmsg;
-            print $auth['error'];
-            exit;
-          }
-                
           $_SESSION['_ntlm_auth'] = $auth;
           return $auth;
         }
