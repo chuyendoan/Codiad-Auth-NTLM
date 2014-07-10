@@ -33,10 +33,10 @@
 
     public static $userdb = array();
     
-    public static function login($static = true) {
+    public static function login($userdb = true) {
       self::ntlm_unset_auth();
     
-      $auth = self::ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", $static);
+      $auth = self::ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", $userdb);
       if ($auth['authenticated']) {
           $_SESSION['user'] = $auth['username'];
       } 
@@ -148,7 +148,7 @@
       unset ($_SESSION['_ntlm_auth']);
     }
 
-    public static function ntlm_prompt($targetname, $domain, $computer, $dnsdomain, $dnscomputer, $ntlm_verify_hash_callback = null, $failmsg = "<h1>Authentication Required</h1>") {
+    public static function ntlm_prompt($targetname, $domain, $computer, $dnsdomain, $dnscomputer, $ntlm_verify_hash_callback = true, $failmsg = "<h1>Authentication Required</h1>") {
 
       $auth_header = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : null;
       if ($auth_header == null && function_exists('apache_request_headers')) {
