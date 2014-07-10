@@ -27,16 +27,16 @@
 
   */
 
-  ntlm::login();
+  ntlm::login(true);
 
   class ntlm {
 
     public static $userdb = array();
     
-    public static function login() {
+    public static function login($static = true) {
       self::ntlm_unset_auth();
     
-      $auth = self::ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", "smb");
+      $auth = self::ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", $static);
       if ($auth['authenticated']) {
           $_SESSION['user'] = $auth['username'];
       } 
@@ -134,7 +134,7 @@
         return array('authenticated' => false, 'error' => 'NTLMv2 response required. Please force your client to use NTLMv2.');
       }
       
-      if($ntlm_verify_hash_callback == null) {
+      if($ntlm_verify_hash_callback) {
         if (!self::ntlm_verify_hash($challenge, $user, $domain, $workstation, $clientblobhash, $clientblob))
           return array('authenticated' => false, 'error' => 'Incorrect username or password.', 'username' => $user, 'domain' => $domain, 'workstation' => $workstation);
       } else {
