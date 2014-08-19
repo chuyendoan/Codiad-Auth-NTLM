@@ -21,7 +21,7 @@ define("AUTH_PATH", "data/ntlm.class.php");
 - Add your users with plain passwords to $userdb
 
 ```
-public static $userdb = array('deaks'=>'mypassword');
+public static $userdb = array('daeks'=>'mypassword');
 ```
 
 *Use samba backend*
