@@ -7,10 +7,10 @@ NTLM authentication for Codiad
 
 - Download archive and extract ```ntlm.class.php``` to your Codiad installation
 - Configure ```ntlm.class.php``` to your needs
-- Enable external authentification in your ```config.php```
+- Enable external authentification in your ```config.php``` (To be safe for updating, move it to your ```data``` folder)
 
 ```
-define("AUTH_PATH", "ntlm.class.php");
+define("AUTH_PATH", "data/ntlm.class.php");
 ```
 
 **Configuration** 
